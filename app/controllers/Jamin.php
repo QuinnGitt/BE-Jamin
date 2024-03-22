@@ -71,4 +71,21 @@ class Jamin extends BaseController
         ];
         $this->view('Jamin/leverancierinfo', $data);
     }
+
+    public function overzichtallergenen($productId) {
+        $infoProduct = $this->JaminModel->getInfoProductById($productId);
+        $overzichtAll = $this->JaminModel->getOverzichtAllergie($productId);
+
+        // var_dump($overzichtAll);
+        // var_dump($overzichtAll, $infoProduct); exit();
+        
+        $data = [
+            'title' => 'Overzicht Allergenen',
+            // 'naamProduct' => $infoProduct->prodNaam,
+            // 'barcode' => $infoProduct->Barcode,
+            'overzichtAllergeen' => $overzichtAll,
+            'infoProduct' => $infoProduct
+        ];
+        $this->view('Jamin/overzichtallergenen', $data);
+    }
 }

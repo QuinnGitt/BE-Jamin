@@ -16,9 +16,12 @@ class JaminModel
                       ,Naam
                       ,VerpakkingsEenheid
                       ,AantalAanwezig
+                      
                 FROM  Product as PRO
                 JOIN  Magazijn as MAG
-                ON    PRO.Id = MAG.Id
+                ON    PRO.Id = MAG.ProductId
+                
+                GROUP BY PRO.Id
                 ORDER BY Barcode ASC";
 
         $this->db->query($sql);
@@ -27,7 +30,7 @@ class JaminModel
 
     public function getLeverancierInfo($productId)
     {
-         $sql = "SELECT  PPLE.DatumLevering
+        $sql = "SELECT  PPLE.DatumLevering
                         ,PPLE.Aantal
                         ,PPLE.DatumEerstVolgendeLevering 
                         ,PROD.Naam
@@ -50,10 +53,72 @@ class JaminModel
                  JOIN Magazijn as MAG
                  ON PROD.Id = MAG.ProductId
                  WHERE PPLE.ProductId = :productId";
-                 
-                 
+
+
         $this->db->query($sql);
         $this->db->bind(':productId', $productId);
         return $this->db->resultSet();
     }
+
+    public function getOverzichtAllergie($productId)
+    {
+
+        $sql = "SELECT alg.Naam as allerNaam
+                ,alg.Omschrijving
+                ,pro.Barcode
+                ,pro.Naam
+                FROM Allergeen alg
+                INNER JOIN ProductPerAllergeen proper
+                ON alg.Id = proper.AllergeenId
+                INNER JOIN product pro
+                ON proper.productId = pro.Id
+                WHERE pro.Id = $productId";
+        // $sql = "SELECT  PROD.Naam as prodNaam
+        //         ,PROD.Barcode
+        //         -- ,ALLE.Naam as allerNaam
+        //         -- ,ALLE.Omschrijving
+        //         -- ,ALLE.Id as allerId
+        //         ,PROD.Id as prodId
+        //         FROM ProductPerAllergeen as PA
+        //         JOIN Product as PROD
+        //         ON PA.ProductId = PROD.Id
+        //         JOIN Allergeen as ALLE
+        //         ON Pa.AllergeenId = ALLE.Id
+        //         -- WHERE PROD.Id = :productId OR ALLE.Id = :allergieId";
+
+        $this->db->query($sql);
+        // $this->db->bind(':allergieId', $allergieId);
+        // $this->db->bind(':productId', $productId);
+        return $this->db->resultSet();
+    }
+
+    public function getInfoProductById($productId)
+    {
+        $sql = "SELECT PRO.Id
+                      ,Naam as prodNaam
+                      ,Barcode
+                    FROM Product AS PRO
+                    WHERE PRO.Id = :productId
+                    ORDER BY Barcode asc";
+
+        $this->db->query($sql);
+        $this->db->bind(':productId', $productId);
+        return $this->db->resultSet();        
+    }
+    // public function productPerAllergeen($allergieId)
+    // {
+    //     $sql = "SELECT PPA.ProductId
+    //                    ,PPA.AllergeenId
+    //                    ,ALLE.Id
+    //                    ,ALLE.Naam as allerNaam
+    //                    ,ALLE.Omschrijving as allerOmschrijving
+    //             FROM Allergeen as ALLE
+    //             INNER JOIN ProductPerAllergeen as PPA
+    //             ON  ALLE.Id = PPA.AllergeenId
+    //             WHERE PPA.ProductId = $allergieId
+    //             ";
+
+    //     $this->db->query($sql);
+    //     return $this->db->resultSet();
+    // }
 }
