@@ -1,6 +1,6 @@
 <?php
 
-class Jamin extend BaseController
+class Jamin extends BaseController
 {
     // de model importeren
     private $JaminModel;
