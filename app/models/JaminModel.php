@@ -43,15 +43,13 @@ class JaminModel
                         ,LEVE.Mobiel 
                         ,LEVE.Id as leveId
                         ,PROD.Naam
-                         
-                    
                  FROM ProductPerLeverancier as PPLE
                  JOIN Product as PROD
-                 ON PPLE.ProductId = PROD.Id
+                 ON   PPLE.ProductId = PROD.Id
                  JOIN Leverancier as LEVE
-                 ON PPLE.LeverancierId = LEVE.Id
+                 ON   PPLE.LeverancierId = LEVE.Id
                  JOIN Magazijn as MAG
-                 ON PROD.Id = MAG.ProductId
+                 ON   PROD.Id = MAG.ProductId
                  WHERE PPLE.ProductId = :productId";
 
 
@@ -63,32 +61,18 @@ class JaminModel
     public function getOverzichtAllergie($productId)
     {
 
-        $sql = "SELECT alg.Naam as allerNaam
-                ,alg.Omschrijving
-                ,pro.Barcode
-                ,pro.Naam
+        $sql = "SELECT  alg.Naam as allerNaam
+                        ,alg.Omschrijving
+                        ,pro.Barcode
+                        ,pro.Naam
                 FROM Allergeen alg
                 INNER JOIN ProductPerAllergeen proper
                 ON alg.Id = proper.AllergeenId
                 INNER JOIN product pro
                 ON proper.productId = pro.Id
                 WHERE pro.Id = $productId";
-        // $sql = "SELECT  PROD.Naam as prodNaam
-        //         ,PROD.Barcode
-        //         -- ,ALLE.Naam as allerNaam
-        //         -- ,ALLE.Omschrijving
-        //         -- ,ALLE.Id as allerId
-        //         ,PROD.Id as prodId
-        //         FROM ProductPerAllergeen as PA
-        //         JOIN Product as PROD
-        //         ON PA.ProductId = PROD.Id
-        //         JOIN Allergeen as ALLE
-        //         ON Pa.AllergeenId = ALLE.Id
-        //         -- WHERE PROD.Id = :productId OR ALLE.Id = :allergieId";
-
+                
         $this->db->query($sql);
-        // $this->db->bind(':allergieId', $allergieId);
-        // $this->db->bind(':productId', $productId);
         return $this->db->resultSet();
     }
 
@@ -97,28 +81,12 @@ class JaminModel
         $sql = "SELECT PRO.Id
                       ,Naam as prodNaam
                       ,Barcode
-                    FROM Product AS PRO
-                    WHERE PRO.Id = :productId
-                    ORDER BY Barcode asc";
+                FROM Product AS PRO
+                WHERE PRO.Id = :productId
+                ORDER BY Barcode asc";
 
         $this->db->query($sql);
         $this->db->bind(':productId', $productId);
         return $this->db->resultSet();        
     }
-    // public function productPerAllergeen($allergieId)
-    // {
-    //     $sql = "SELECT PPA.ProductId
-    //                    ,PPA.AllergeenId
-    //                    ,ALLE.Id
-    //                    ,ALLE.Naam as allerNaam
-    //                    ,ALLE.Omschrijving as allerOmschrijving
-    //             FROM Allergeen as ALLE
-    //             INNER JOIN ProductPerAllergeen as PPA
-    //             ON  ALLE.Id = PPA.AllergeenId
-    //             WHERE PPA.ProductId = $allergieId
-    //             ";
-
-    //     $this->db->query($sql);
-    //     return $this->db->resultSet();
-    // }
 }

@@ -81,8 +81,6 @@ class Jamin extends BaseController
         
         $data = [
             'title' => 'Overzicht Allergenen',
-            // 'naamProduct' => $infoProduct->prodNaam,
-            // 'barcode' => $infoProduct->Barcode,
             'overzichtAllergeen' => $overzichtAll,
             'infoProduct' => $infoProduct
         ];
